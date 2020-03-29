@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Image Squareifier</title>
+</head>
+<body>
+<h2>/*/</h2>
+<p id="status"></p>
+<div>
+  <div class="inputoutput">
+  <!-- Image Display -->
+    <img id="imageSrc" alt="No Image" />
+    <div class="caption">Upload image: <input type="file" id="fileInput" name="file" /></div>
+  </div>
+  <div class="inputoutput">
+    <canvas id="canvasOutput" ></canvas>
+    <div class="caption"></div>
+  </div>
+</div>
+<script type="text/javascript">
+let imgElement = document.getElementById('imageSrc');
+let inputElement = document.getElementById('fileInput');
+inputElement.addEventListener('change', (e) => {
+  imgElement.src = URL.createObjectURL(e.target.files[0]);
+}, false);
+imgElement.onload = function() {
+  let img = cv.imread(imgElement);
+  let padded = new cv.Mat();
+  let resized = new cv.Mat();
+  let x = img.cols;
+  let y = img.rows;
+  //let z = img.depth;
+
+
+  //* Pad to square
+  // find max dimension
+  let biggest = (x >= y) ? x : y;
+
+  // total amount to pad
+  let pad_x = (biggest - x);
+  let pad_y = (biggest - y);
+
+  // cut in half to pad each size evenly
+	let val_x = pad_x/2;
+	let val_y = pad_y/2;
+	console.log(val_x);
+	console.log(val_y);
+
+	let left = val_x;
+	let right = val_x;
+	let top = val_y;
+	let bottom = val_y;
+
+	// if the source image is of odd dimensions,
+	// need to add 1 pixel to make it consistent
+	if (pad_x % 2) {
+		++right;
+	}
+	if (pad_y % 2) {
+		++bottom;
+	}
+
+	// border color
+	let s = new cv.Scalar(0, 0, 0, 255);
+
+	// pad
+	cv.copyMakeBorder(img, padded, top, bottom, left, right, cv.BORDER_CONSTANT, s);
+  //*/
+
+  // resize image to desired dimensions
+  let dsize = new cv.Size(30, 30);
+  cv.resize(padded, resized, dsize, 0, 0, cv.INTER_AREA);
+  dsize = new cv.Size(600, 600);
+  cv.resize(resized, resized, dsize, 0, 0, cv.INTER_AREA);
+
+  cv.imshow('canvasOutput', resized);
+  img.delete();
+  padded.delete();
+  resized.delete();
+};
+imgElement.parentNode.removeChild(imgElement);
+function onOpenCvReady() {
+  document.getElementById('status').innerHTML = '';
+}
+</script>
+<script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+</body>
+</html>
