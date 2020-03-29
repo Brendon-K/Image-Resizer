@@ -8,6 +8,9 @@
 <h2>/*/</h2>
 <p id="status"></p>
 <div>
+  <input type="checkbox" id="square" checked> square?<br>
+  x:<input type="text" value="32" id="x" size="1em"><br>
+  y:<input type="text" value="32" id="y" size="1em" disabled="true">
   <div class="inputoutput">
   <!-- Image Display -->
     <img id="imageSrc" alt="No Image" />
@@ -19,6 +22,18 @@
   </div>
 </div>
 <script type="text/javascript">
+let x_in = document.getElementById('x');
+let y_in = document.getElementById('y');
+// disable y box if square is checked
+let square = false;
+document.getElementById('square').onclick = function() {
+  if (this.checked) {
+    square = true;
+  } else {
+    square = false;
+  }
+  y.disabled = square;
+}
 let imgElement = document.getElementById('imageSrc');
 let inputElement = document.getElementById('fileInput');
 inputElement.addEventListener('change', (e) => {
@@ -30,6 +45,8 @@ imgElement.onload = function() {
   let resized = new cv.Mat();
   let x = img.cols;
   let y = img.rows;
+  let x_dim = 0;
+  let y_dim = 0;
   //let z = img.depth;
 
 
@@ -44,8 +61,6 @@ imgElement.onload = function() {
   // cut in half to pad each size evenly
 	let val_x = pad_x/2;
 	let val_y = pad_y/2;
-	console.log(val_x);
-	console.log(val_y);
 
 	let left = val_x;
 	let right = val_x;
@@ -69,9 +84,19 @@ imgElement.onload = function() {
   //*/
 
   // resize image to desired dimensions
-  let dsize = new cv.Size(32, 32);
+  x_dim = parseInt(x_in.value);
+  console.log(square);
+
+  if (square) {
+    y_dim = parseInt(x_in.value);
+  } else {
+    y_dim = parseInt(y_in.value);
+  }
+  console.log(x_dim);
+  console.log(y_dim);
+  let dsize = new cv.Size(x_dim, y_dim);
   cv.resize(padded, resized, dsize, 0, 0, cv.INTER_AREA);
-  dsize = new cv.Size(600, 600);
+  dsize = new cv.Size(512, 512);
   cv.resize(resized, resized, dsize, 0, 0, cv.INTER_AREA);
 
   cv.imshow('canvasOutput', resized);
