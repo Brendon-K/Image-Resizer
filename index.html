@@ -69,7 +69,7 @@ imgElement.onload = function() {
   //*/
 
   // resize image to desired dimensions
-  let dsize = new cv.Size(30, 30);
+  let dsize = new cv.Size(32, 32);
   cv.resize(padded, resized, dsize, 0, 0, cv.INTER_AREA);
   dsize = new cv.Size(600, 600);
   cv.resize(resized, resized, dsize, 0, 0, cv.INTER_AREA);
