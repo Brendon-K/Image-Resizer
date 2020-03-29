@@ -83,7 +83,7 @@ imgElement.onload = function() {
 	cv.copyMakeBorder(img, padded, top, bottom, left, right, cv.BORDER_CONSTANT, s);
   //*/
 
-  //* resize image to desired dimensions
+  //* Resize image to desired dimensions
   x_dim = parseInt(x_in.value);
   console.log(square);
 
@@ -98,7 +98,7 @@ imgElement.onload = function() {
   cv.resize(padded, resized, dsize, 0, 0, cv.INTER_AREA);
   //*/
 
-  // Display image in reasonable dimensions
+  // display image in reasonable dimensions
   dsize = new cv.Size(512, 512);
   cv.resize(resized, resized, dsize, 0, 0, cv.INTER_AREA);
 
