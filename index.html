@@ -47,7 +47,7 @@ imgElement.onload = function() {
   let y = img.rows;
   let x_dim = 0;
   let y_dim = 0;
-  //let z = img.depth;
+  //let z_dim = img.depth;
 
 
   //* Pad to square
@@ -83,7 +83,7 @@ imgElement.onload = function() {
 	cv.copyMakeBorder(img, padded, top, bottom, left, right, cv.BORDER_CONSTANT, s);
   //*/
 
-  // resize image to desired dimensions
+  //* resize image to desired dimensions
   x_dim = parseInt(x_in.value);
   console.log(square);
 
@@ -96,6 +96,9 @@ imgElement.onload = function() {
   console.log(y_dim);
   let dsize = new cv.Size(x_dim, y_dim);
   cv.resize(padded, resized, dsize, 0, 0, cv.INTER_AREA);
+  //*/
+
+  // Display image in reasonable dimensions
   dsize = new cv.Size(512, 512);
   cv.resize(resized, resized, dsize, 0, 0, cv.INTER_AREA);
 
