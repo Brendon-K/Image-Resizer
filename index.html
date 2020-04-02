@@ -8,6 +8,25 @@
 <h2>/*/</h2>
 <p id="status"></p>
 <div>
+  <label for="palette">Choose a color palette:</label>
+
+  <select id="palette">
+    <option value="-1">No palette</option>
+    <option style="background-color:rgb(230, 42, 41);" value="0">1</option>
+    <option style="background-color:rgb(111, 13, 12);" value="1">2</option>
+    <option style="background-color:rgb(231, 123, 123);" value="2">3</option>
+    <option style="background-color:rgb(231, 133, 106);" value="3">4</option>
+    <option style="background-color:rgb(69, 69, 215);" value="4">5</option>
+    <option style="background-color:rgb(201, 91, 64);" value="5">6</option>
+    <option style="background-color:rgb(109, 37, 38);" value="6">7</option>
+    <option style="background-color:rgb(231, 231, 59);" value="7">8</option>
+    <option style="background-color:rgb(140, 0, 89);" value="8">9</option>
+    <option style="background-color:rgb(230, 231, 155);" value="9">10</option>
+    <option style="background-color:rgb(153, 230, 184);" value="10">11</option>
+    <option style="background-color:rgb(230, 221, 214);" value="11">12</option>
+    <option style="background-color:rgb(230, 221, 214);" value="12">13</option>
+    <option style="background-color:rgb(230, 230, 230);" value="13">14</option>
+  </select><br>
   <input type="checkbox" id="square" checked> square?<br>
   x:<input type="text" value="32" id="x" size="1em"><br>
   y:<input type="text" value="32" id="y" size="1em" disabled="true">
@@ -22,6 +41,44 @@
   </div>
 </div>
 <script type="text/javascript">
+function nearest_color(pixel, colors) {
+  /*
+  Returns the distance from the input pixel to the nearest color in colors list
+  */
+  distances = new Array();
+  let num_colors = colors.length;
+  // get all the distances
+  for (let i = 0; i < num_colors; ++i) {
+    // get distance between pixel and a color
+    let distance = 0;
+    for (let j = 0; j < 3; ++j) {
+      let diff = pixel[j] - colors[i][j];
+      distance += Math.pow(diff, 2);
+    }
+    distance = Math.sqrt(distance);
+    distances.push([distance, i]);
+  }
+
+  // get the closest distance
+  distances.sort();
+  let idx = distances[0][1];
+  return colors[idx];
+}
+
+var colors;
+
+// get colors array
+fetch('https://raw.githubusercontent.com/Brendon-K/Image-Resizer/master/colors.json')
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (data) {
+    colors = data;
+  })
+  .catch(function (err) {
+    console.log("Error reading JSON");
+  });
+
 let x_in = document.getElementById('x');
 let y_in = document.getElementById('y');
 // disable y box if square is checked
@@ -34,11 +91,13 @@ document.getElementById('square').onclick = function() {
   }
   y.disabled = square;
 }
+
 let imgElement = document.getElementById('imageSrc');
 let inputElement = document.getElementById('fileInput');
 inputElement.addEventListener('change', (e) => {
   imgElement.src = URL.createObjectURL(e.target.files[0]);
 }, false);
+
 imgElement.onload = function() {
   let img = cv.imread(imgElement);
   let padded = new cv.Mat();
@@ -48,7 +107,7 @@ imgElement.onload = function() {
   let x_dim = 0;
   let y_dim = 0;
   //let z_dim = img.depth;
-
+  let palette = document.getElementById('palette').value;
 
   //* Pad to square
   // find max dimension
@@ -85,19 +144,31 @@ imgElement.onload = function() {
 
   //* Resize image to desired dimensions
   x_dim = parseInt(x_in.value);
-  console.log(square);
 
   if (square) {
     y_dim = parseInt(x_in.value);
   } else {
     y_dim = parseInt(y_in.value);
   }
-  console.log(x_dim);
-  console.log(y_dim);
+
   let dsize = new cv.Size(x_dim, y_dim);
   cv.resize(padded, resized, dsize, 0, 0, cv.INTER_AREA);
   //*/
 
+  //* Apply color change
+  if (palette != -1) {
+    for (let i = 0; i < y_dim; ++i) {
+      for (let j = 0; j < x_dim; ++j) {
+        let pixel = resized.ucharPtr(i, j).slice(0, 3);
+        let new_color = nearest_color(pixel, colors[palette]);
+        for (let k = 0; k < 3; ++k) {
+          resized.ucharPtr(i, j)[k] = new_color[k];
+        }
+      }
+    }
+  }
+  //*/
+  
   // display image in reasonable dimensions
   dsize = new cv.Size(512, 512);
   cv.resize(resized, resized, dsize, 0, 0, cv.INTER_AREA);
@@ -106,6 +177,7 @@ imgElement.onload = function() {
   img.delete();
   padded.delete();
   resized.delete();
+  inputElement.name="";
 };
 imgElement.parentNode.removeChild(imgElement);
 function onOpenCvReady() {
