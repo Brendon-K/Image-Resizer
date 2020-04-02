@@ -5,6 +5,8 @@ https://brendon-k.github.io/Image-Resizer/
 
 ## RGB values for Animal Crossing palettes.<sup>\*</sup>:
 
+<sup>\* Colors were found by taking a screenshot and using a color picker in the middle of the colors, so they may be very slightly off due to jpg compression or whatever</sup>
+
 | Palette | Color1        | Color2        | Color3        | Color4        | Color5        | Color6        | Color7        | Color8        | Color9        | Color10       | Color11       | Color12       | Color13       | Color14       | Color15       |
 |---------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|
 | 1       | 230, 42, 41   | 231, 120, 41  | 230, 231, 31  | 120, 231, 41  | 26, 143, 28   | 58, 185, 217  | 47, 148, 218  | 62, 63, 229   | 140, 77, 228  | 231, 90, 203  | 230, 171, 155 | 142, 81, 63   | 230, 230, 230 | 112, 112, 112 | 0, 0, 0       |
@@ -22,4 +24,3 @@ https://brendon-k.github.io/Image-Resizer/
 | 13      | 230, 221, 214 | 230, 206, 106 | 229, 188, 0   | 230, 170, 74  | 230, 145, 0   | 230, 157, 138 | 230, 119, 91  | 215, 87, 52   | 186, 53, 12   | 141, 37, 0    | 171, 95, 37   | 156, 72, 12   | 110, 46, 0    | 77, 34, 0     | 45, 13, 0     |
 | 14      | 230, 230, 230 | 215, 215, 215 | 200, 200, 200 | 186, 186, 186 | 171, 171, 171 | 156, 156, 156 | 141, 141, 141 | 126, 126, 126 | 110, 110, 110 | 95, 95, 95    | 77, 77, 77    | 61, 61, 61    | 46, 46, 46    | 28, 28, 28    | 0, 0, 0       |
 
-<sup>\* Colors were found by taking a screenshot and using a color picker in the middle of the colors, so they may be very slightly off due to jpg compression or whatever</sup>
