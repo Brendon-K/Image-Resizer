@@ -60,7 +60,17 @@ function nearest_color(pixel, colors) {
   for (let i = 0; i < num_colors; ++i) {
     // get distance between pixel and a color
     let distance = 0;
-    //* Weighted Euclidean Distance
+    //* Testing something different
+    //* source: https://www.compuphase.com/cmetric.htm
+    let r_bar = (pixel[2] + colors[i][0]) / 2;
+    let delta_r = pixel[2] - colors[i][0];
+    let delta_g = pixel[1] - colors[i][1];
+    let delta_b = pixel[0] - colors[i][2];
+    distance = (2+(r_bar/256))*Math.pow(delta_r, 2) + 
+                4*Math.pow(delta_g, 2) + 
+                (2+(255-r_bar)/256)*Math.pow(delta_b, 2);
+    //*/
+    /* Weighted Euclidean Distance
     for (let j = 0; j < 3; ++j) {
       let diff = pixel[j] - colors[i][2-i];
       switch (j) {
