@@ -62,7 +62,7 @@ function nearest_color(pixel, colors) {
     let distance = 0;
     //* Weighted Euclidean Distance
     for (let j = 0; j < 3; ++j) {
-      let diff = pixel[j] - colors[i][j];
+      let diff = pixel[j] - colors[i][2-i];
       switch (j) {
         case 0: // B
           diff *= 2;
