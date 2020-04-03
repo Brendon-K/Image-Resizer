@@ -69,28 +69,7 @@ function nearest_color(pixel, colors) {
     distance = (2+(r_bar/256))*Math.pow(delta_r, 2) + 
                 4*Math.pow(delta_g, 2) + 
                 (2+(255-r_bar)/256)*Math.pow(delta_b, 2);
-    //*/
-    /* Weighted Euclidean Distance
-    for (let j = 0; j < 3; ++j) {
-      let diff = pixel[j] - colors[i][2-i];
-      switch (j) {
-        case 0: // B
-          diff *= 2;
-          break;
-        case 1: // G
-          diff *= 4;
-          break;
-        case 2: // R
-          diff *= 3;
-          break;
-        default:
-          console.log("Uh oh.");
-          break;
-      }
 
-      distance += Math.pow(diff, 2);
-    }
-    //*/
     distance = Math.sqrt(distance);
     distances.push([distance, i]);
   }
