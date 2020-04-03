@@ -7,9 +7,9 @@
 <body>
 <h2>/*/</h2>
 <p id="status"></p>
-<div>
+<form onsubmit="return run()">
+  <!-- dropdown box -->
   <label for="palette">Choose a color palette:</label>
-
   <select id="palette">
     <option value="-1">No palette</option>
     <option style="background-color:rgb(230, 42, 41);" value="0">1</option>
@@ -27,18 +27,27 @@
     <option style="background-color:rgb(230, 221, 214);" value="12">13</option>
     <option style="background-color:rgb(230, 230, 230);" value="13">14</option>
   </select><br>
-  <input type="checkbox" id="square" checked> square?<br>
-  x:<input type="text" value="32" id="x" size="1em"><br>
-  y:<input type="text" value="32" id="y" size="1em" disabled="true">
-  <div class="inputoutput">
-  <!-- Image Display -->
-    <img id="imageSrc" alt="No Image" />
-    <div class="caption">Upload image: <input type="file" id="fileInput" name="file" /></div>
-  </div>
-  <div class="inputoutput">
-    <canvas id="canvasOutput" ></canvas>
-    <div class="caption"></div>
-  </div>
+
+  <!-- checkbox -->
+  <label for="square">Square?</label>
+  <input type="checkbox" id="square" checked><br>
+
+  <!-- dimensions -->
+  <label for="x">x:</label>
+  <input type="text" value="32" id="x" size="1em"><br>
+  <label for="y">y:</label>
+  <input type="text" value="32" id="y" size="1em" disabled="true"><br>
+
+  <!-- file upload -->
+  <label for="fileInput">Upload image: </label>
+  <input type="file" id="fileInput" name="file"><br>
+  <!-- submit -->
+  <input type="submit">
+</form>
+<div class="inputoutput">
+  <img id="imageSrc">
+  <canvas id="canvasOutput" ></canvas>
+  <div class="caption"></div>
 </div>
 <script type="text/javascript">
 function nearest_color(pixel, colors) {
@@ -51,10 +60,27 @@ function nearest_color(pixel, colors) {
   for (let i = 0; i < num_colors; ++i) {
     // get distance between pixel and a color
     let distance = 0;
+    //* Weighted Euclidean Distance
     for (let j = 0; j < 3; ++j) {
       let diff = pixel[j] - colors[i][j];
+      switch (j) {
+        case 0: // B
+          diff *= 2;
+          break;
+        case 1: // G
+          diff *= 4;
+          break;
+        case 2: // R
+          diff *= 3;
+          break;
+        default:
+          console.log("Uh oh.");
+          break;
+      }
+
       distance += Math.pow(diff, 2);
     }
+    //*/
     distance = Math.sqrt(distance);
     distances.push([distance, i]);
   }
@@ -98,7 +124,7 @@ inputElement.addEventListener('change', (e) => {
   imgElement.src = URL.createObjectURL(e.target.files[0]);
 }, false);
 
-imgElement.onload = function() {
+function run() {
   let img = cv.imread(imgElement);
   let padded = new cv.Mat();
   let resized = new cv.Mat();
@@ -177,9 +203,10 @@ imgElement.onload = function() {
   img.delete();
   padded.delete();
   resized.delete();
-  inputElement.name="";
+
+  imgElement.hidden = true;
+  return false;
 };
-imgElement.parentNode.removeChild(imgElement);
 function onOpenCvReady() {
   document.getElementById('status').innerHTML = '';
 }
